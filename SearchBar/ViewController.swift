@@ -34,17 +34,21 @@ class ViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
 
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "Search Bar"
-        navigationController?.navigationBar.barTintColor = barTintColor
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barStyle = .black
-        navigationController?.navigationBar.tintColor = .white
+        configureNavigationBar(withTitle: "Search Bar",
+                               prefersLargeTitles: true,
+                               barTintColor: barTintColor)
 
         showSearchBarButton(shouldShow: true)
 
         searchBar.sizeToFit()
         searchBar.delegate = self
+        searchBar.placeholder = "Search for an item 🎃"
+        definesPresentationContext = false
+
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+            textField.textColor = .darkGray
+            textField.backgroundColor = .white
+        }
     }
 
     private func showSearchBarButton(shouldShow: Bool) {
@@ -85,3 +89,26 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
+extension UIViewController {
+
+    func configureNavigationBar(withTitle title: String,
+                                prefersLargeTitles: Bool,
+                                barTintColor: UIColor = .systemPurple) {
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.backgroundColor = barTintColor
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+
+        navigationController?.navigationBar.prefersLargeTitles = prefersLargeTitles
+        navigationItem.title = title
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.isTranslucent = true
+
+        navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
+    }
+}
